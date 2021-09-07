@@ -387,6 +387,7 @@ class ClientTLSLayer(_TLSLayer):
         self.recv_buffer.extend(data)
         try:
             client_hello = parse_client_hello(self.recv_buffer)
+            self.conn.client_hello_raw = self.recv_buffer[:]
         except ValueError:
             return False, f"Cannot parse ClientHello: {self.recv_buffer.hex()}"
 

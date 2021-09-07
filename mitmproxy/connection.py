@@ -89,6 +89,7 @@ class Connection(serializable.Serializable, metaclass=ABCMeta):
     """
     The [Server Name Indication (SNI)](https://en.wikipedia.org/wiki/Server_Name_Indication) sent in the ClientHello.
     """
+    client_hello_raw: Optional[bytes] = None
 
     timestamp_start: Optional[float]
     timestamp_end: Optional[float] = None
@@ -187,6 +188,7 @@ class Client(Connection):
             'certificate_list': [x.get_state() for x in self.certificate_list],
             'alpn_offers': self.alpn_offers,
             'cipher_list': self.cipher_list,
+            'client_hello_raw': self.client_hello_raw,
         }
 
     @classmethod
@@ -218,6 +220,7 @@ class Client(Connection):
         self.mitmcert = certs.Cert.from_state(state["mitmcert"]) if state["mitmcert"] is not None else None
         self.alpn_offers = state["alpn_offers"]
         self.cipher_list = state["cipher_list"]
+        self.client_hello_raw = state["client_hello_raw"]
 
     @property
     def address(self):  # pragma: no cover
